@@ -1,11 +1,11 @@
 <?php
 	class LoginController extends Controller{
 		public static function login(){
-			session_start();
+			self::setSession();
 			if(isset($_POST['login-submit'])){
-				
-				$uid = self::quote($_POST['uid']);
-				$pwd = self::quote($_POST['pwd']);
+
+				$uid = $_POST['uid'];
+				$pwd = $_POST['pwd'];
 				//error handlers
 				if(empty($uid) || empty($pwd)){
 					header('Location: home?status=empty');
@@ -40,7 +40,6 @@
 								$_SESSION['u_type'] = $row['type'];
 								header('Location: home?status=loginsuccess');
 								exit();
-							
 							}
 						}
 					}
@@ -52,39 +51,43 @@
 			}
 		}
 		public static function signup(){
-
+			self::setSession();
 			if(isset($_POST["signup-submit"])){
-				$first = self::quote($_POST['first']);
-				$last = self::quote($_POST['last']);
-				$uid = self::quote($_POST['uid']);
-				$pwd =self::quote($_POST['pwd']);
-				
+				$first = $_POST['first'];
+				$last = $_POST['last'];
+				$uid = $_POST['uid'];
+				$pwd =$_POST['pwd'];
+				$type = $_POST['type'];
+
 				//error handling
-				if(empty($first) || empty($last) || empty($uid) || empty($pwd)){			
+				if(empty($first) || empty($last) || empty($uid) || empty($pwd)){
 					header("Location: signup?status=empty");
 					exit();
 				}
 				else{
 					//no error here
-					
+
 					//all stuff are valid
 					$sql = "Select * from users where username = ?";
 					$resultChecked = self::isExist($sql, array($uid));
 
 					if($resultChecked ==true){
-						echo "exists";
-						//header('Location: signup?status=error');
-						//exit();
+						header('Location: signup-form?status=username-existing');
+						exit();
 					}
 					else{
 						//user not used
 						$hashed_pwd = password_hash($pwd, PASSWORD_DEFAULT);
-						$sql = "Insert into users (first, last, username, password, type) values (?, ?, ?, ?, 'STUDENT');";
-						self::query($sql, array($first, $last, $uid, $hashed_pwd));
-						header('Location home?status=signupsuccess');
-						exit();
+						if(self::insertSignup($first, $last, $uid, $pwd, $type)){
+								header('Location: signup-form?status=signup-success');
+								exit();
+						}
+						else{
+								header('Location: signup-form?status=signup-failed');
+								exit();
+						}
 					}
-					
+
 				}
 			}
 			else{

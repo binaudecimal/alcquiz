@@ -1,5 +1,6 @@
 <?php
 	class QuestionController extends Controller{
+
 		public static function addQuestion(){
 			$region = $_POST['region'];
 			$question = $_POST['question'];
@@ -13,10 +14,14 @@
 				exit();
 			}
 			else{
-				$sql = "INSERT into questions (question, answer_correct, answer_wrong1, answer_wrong2, answer_wrong3,region, active_status) values (?,?,?,?,?,?,?)";
-				self::query($sql, array($question, $answer_correct, $answer_wrong1,$answer_wrong2,$answer_wrong3,$region, true));
-				header('Location: add-question-form?status=addsuccess');		
-				exit();		
+				if(self::insertAddQuestion($question,$region , $answer_correct, $answer_wrong1,$answer_wrong2,$answer_wrong3)){
+					header('Location: add-question-form?status=questionAdd-success');
+					exit();
+				}
+				else{
+					header('Location: add-question-form?status=questionAdd-failed');
+					exit();
+				}
 			}
 		}
 
@@ -34,123 +39,70 @@
 		}
 
 		public static function activateQuiz(){
-
-			$duration = 10;
-			$items = 10;
-			$sql = "SELECT user_id from users where type = 'STUDENT'";
-			$users = self::query($sql, array());
-			if(!is_null($users)){
-				foreach ($users as $row) {
-					$sql = "INSERT into quiz_instance (items, duration, user_id) values (?,?,?)";
-					self::query($sql, array($items, $duration, $row['user_id']));
-				}
-			}
-
-			header('Location: home?status=activated');
-			exit();
-
-		}
-
-		public static function generateQuestionSet(){
-			if(!isset($_SESSION)){
-				session_start();
-			}
-
-			if(isset($_GET['region']) && isset($_SESSION['u_user_id'])){
-				$region = $_GET['region'];
-				$user_id = $_SESSION['u_user_id'];
-				$sql = "SELECT * from quiz_instance where user_id = ?";
-				$qinstance = self::fetch($sql, array($user_id));
-				if(is_null($qinstance)){ //check if quiz active
-					header('Location: home?noactivequiz');
+			if(isset($_POST['activate-quiz-submit'])){
+				$duration = $_POST['duration-input'];
+				$items = $_POST['item-input'];
+				if(self::insertActivateQuiz($items, $duration)){
+					header('Location: home?status=activate-success');
 					exit();
 				}
-				else{ //there is an active quiz
-					if(!empty($qinstance['region'])){
-						//continue current quiz
-						echo "not working";
-						header("Location: quiz-take?user_id=".$user_id. '&qinstance_id='.$qinstance['qinstance_id']);
-						exit();
-					}
-					else{	//not yet started, generate quiz set
-						$limit = $qinstance['items'];
-						$duration = $qinstance['duration'];
+				else{
+					header('Location: home?status=activate-failed');
+					exit();
+				}
+			}
+		}
+		public static function startQuiz(){
+			self::setSession();
+			$region = $_GET['region'];
+			$user_id = $_SESSION['u_user_id'];
+			$data = self::fetch("SELECT * from quiz_instance where user_id = ? and date_finished is NULL", array($user_id));
 
-						$sql = "SELECT * from questions where region = ? ORDER BY RAND() limit " .$limit;
-						$result = self::query($sql, array($region));
-						//var_dump($result);
-						//insert answer instance for each row
-						foreach($result as $row){
-							$sql = "INSERT into answer_instance (user_id, question_id, qinstance_id) values (?,?,?)";
-							self::query($sql, array($user_id, $row['question_id'], $qinstance['qinstance_id']));
-						}
-						self::query("UPDATE quiz_instance set region = ? where qinstance_id = ?",array($region, $qinstance['qinstance_id']));
-
-						//quiz generated, send for answers
-
-						header('Location: quiz-take?status=success&qinstance_id =' . $qinstance['qinstance_id'] . '&user_id = ' . $user_id);
-						exit();
-					}
+			if($data != false){
+				//quiz active check for region
+				$qinstance_id = $data['qinstance_id'];
+				if($data['region'] == null){
+					$limit = $data['items'];
+					self::insertQuiz($user_id, $qinstance_id, $region, $limit);
+				}
+				if(self::selectNextQuestion($qinstance_id)){
+					header('Location: quiz-take');
+					exit();
+				}
+				else{
+					header('Location: home?status=quizTake=complete');
+					exit();
 				}
 			}
 			else{
-				header('Location: home?status=conneror');
+				header('Location: home?status=startQuiz-failed2');
 				exit();
 			}
-			
 		}
-
-		public static function generateQuestion(){
-			if(!isset($_SESSION)){
-				session_start();
-			}
-			$user_id = $_GET['user_id'];
-			$qinstance_id = $_GET['qinstance_id'];
-			//fetch quiz_instance 
-			$sql = "SELECT question_id, ainstance_id from answer_instance where user_id = ? and qinstance_id = ? and weighted_score is null";
-			$question_id = self::fetch($sql, array($user_id, $qinstance_id));
-			//fetch the question itself
-			$sql = 'SELECT * from questions where question_id = ?';
-			$question_row = self::fetch($sql, array($question_id['question_id']));
-			$answer_array = array($question_row['answer_correct'],$question_row['answer_wrong1'],$question_row['answer_wrong2'],$question_row['answer_wrong3']);
-			$_SESSION['ainstance_id'] =  $question_id['ainstance_id'];
-			$_SESSION['question_id'] = $question_id['question_id'];
-			$_SESSION['question'] = $question_row['question'];
-			$_SESSION['region'] = $question_row['region'];
-			shuffle($answer_array);
-			$_SESSION['answers'] = $answer_array;
-			//get duration
-			
-			$_SESSION['duration'] = (self::fetch("SELECT duration from quiz_instance where qinstance_id = ?",array($qinstance_id)))['duration'];
-			//var_dump($_SESSION);
-		}
-
 		public static function processAnswer(){
 			self::setSession();
 			if(!isset($_GET['answer'])){
-				header('Location: quiz-start?status=error');
+				echo "something wrong";
+			}
+			else{
+				$answer = $_GET['answer'];
+				$qinstance_id = $_SESSION['qinstance_id'];
+				$question_id = $_SESSION['question_id'];
+				$user_id = $_SESSION['u_user_id'];
+
+				$ainstance_row = self::fetch("SELECT * from answer_instance where user_id = ? and qinstance_id = ? and question_id = ? and weighted_score is NULL", array($user_id, $qinstance_id, $question_id));
+				$quiz_row = self::fetch("SELECT * from questions where question_id = ?",array($question_id));
+				$weighted_score = ($answer == $quiz_row['answer_correct']) ? 1.0 : 0.0;
+				self::query("UPDATE answer_instance set weighted_score = ? where ainstance_id = ?",array($weighted_score, $ainstance_row['ainstance_id']));
+				$qinstance_row = self::fetch('SELECT * from quiz_instance where qinstance_id = ?', array($qinstance_id));
+				$qinstance_score = ($qinstance_row['total_score'] == null)? 0 : 1;
+				$qinstance_score += $weighted_score;
+				self::query("UPDATE quiz_instance set total_score = ? where qinstance_id = ?",array($qinstance_score,$qinstance_id));
+				header('Location: start-quiz');
 				exit();
 			}
-			else{ //check for answer match
-				//get ainstance
-				$answer = $_GET['answer'];
-				$sql = "SELECT * from answer_instance where ainstance_id = ?";
-				$ainstance_row = self::fetch($sql, array($_SESSION['ainstance_id']));
-				if(is_null($ainstance_row)){
-					echo "Something went wrong";
-				}	
-				else{
-					//find the question
-					$question_id = $_SESSION['question_id'];
-					$ainstance_id = $_SESSION['ainstance_id'];
-
-					$question_row = self::fetch("SELECT answer_correct from questions where question_id = ?", array($question_id));
-					$correct_answer = $question_row['answer_correct'];
-					echo strcmp($correct_answer, $answer);
-					
-				}
-
-			}
 		}
+
+		//EOF
 	}
 ?>

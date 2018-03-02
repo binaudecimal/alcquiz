@@ -1,4 +1,5 @@
 <div class='add-question-form'>
+	<h2>Add Question</h2>
 		<form action='add-question' method='POST'>
 		<select name='region'>
 			<option value='ncr'>National Capital Region (NCR)</option>
@@ -17,13 +18,13 @@
 			<option value='region11'>Davao Region (Region 11)</option>
 			<option value='region12'>SOCCSLSARGEN (Region 12)</option>
 			<option value='region13'>Caraga Region (Region 13)</option>
-			<option value='armm'>Autonomous Region in Muslim Mindanao (ARMM)</option>	
+			<option value='armm'>Autonomous Region in Muslim Mindanao (ARMM)</option>
 		</select>
-		<input type='text' name='question' placeholder='Question' autofocus="auto">
-		<input type='text' name='answer_correct' placeholder='Correct Answer'>
-		<input type='text' name='answer_wrong1' placeholder='Wrong Answer'>
-		<input type='text' name='answer_wrong2' placeholder='Wrong Answer'>
-		<input type='text' name='answer_wrong3' placeholder='Wrong Answer'>
-		<button type='submit'>SUBMIT QUESTION </button>
+		<input type='text' name='question' placeholder='Question' autofocus="auto" required>
+		<input type='text' name='answer_correct' placeholder='Correct Answer'required>
+		<input type='text' name='answer_wrong1' placeholder='Wrong Answer'required>
+		<input type='text' name='answer_wrong2' placeholder='Wrong Answer'required>
+		<input type='text' name='answer_wrong3' placeholder='Wrong Answer'required>
+		<button type='submit'>SUBMIT</button>
 	</form>
 </div>

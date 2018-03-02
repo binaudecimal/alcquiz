@@ -1,8 +1,8 @@
-/* 
+/*
 html5doctor.com Reset Stylesheet
 v1.6.1
 Last Updated: 2010-09-17
-Author: Richard Clark - http://richclarkdesign.com 
+Author: Richard Clark - http://richclarkdesign.com
 Twitter: @rich_clark
 */
 
@@ -15,7 +15,7 @@ b, i,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, figcaption, figure, 
+article, aside, canvas, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video {
     margin:0;
@@ -32,7 +32,7 @@ body {
 }
 
 article,aside,details,figcaption,figure,
-footer,header,hgroup,menu,nav,section { 
+footer,header,hgroup,menu,nav,section {
     display:block;
 }
 
@@ -68,7 +68,7 @@ ins {
 /* change colours to suit your needs */
 mark {
     background-color:#ff9;
-    color:#000; 
+    color:#000;
     font-style:italic;
     font-weight:bold;
 }
@@ -91,7 +91,7 @@ table {
 hr {
     display:block;
     height:1px;
-    border:0;   
+    border:0;
     border-top:1px solid #cccccc;
     margin:1em 0;
     padding:0;
@@ -187,7 +187,7 @@ header .nav-login a {
 
 .main-container {
 	padding-top: 40px;
-	
+
 }
 .main-container h2 {
 	padding-top: 40px;
@@ -200,13 +200,13 @@ header .nav-login a {
 
 /* signup */
 
-.signup-form {
+.add-question-form {
 	width: 400px;
 	margin: 0 auto;
 	padding-top: 30px;
-	
+
 }
-.signup-form input {
+.add-question-form input {
 	width: 90%;
 	height: 40x;
 	padding: 0px 5%;
@@ -218,7 +218,7 @@ header .nav-login a {
 	color: #111;
 	line-height: 40px;
 }
-.signup-form button {
+.add-question-form button {
 	display: block;
 	margin: 0 auto;
 	width: 30%;
@@ -231,12 +231,70 @@ header .nav-login a {
 	line-height: 40px;
 	cursor: pointer;
 }
-.signup-form button:hover {
+.add-question-form button:hover {
 	background-color: #111;
 }
+/*  Add question form */
+.add-question-form h2 {
+	padding-top: 40px;
+	font-family: arial;
+	fon-size: 40px;
+	color: #111;
+	line-height: 50px;
+	text-align: center;
+}
+.add-question-form {
+	width: 400px;
+	margin: 0 auto;
+	padding-top: 30px;
+
+}
+.add-question-form input {
+	width: 90%;
+	height: 40x;
+	padding: 0px 5%;
+	margin-bottom: 4px;
+	border: none;
+	background-color: #fff;
+	font-family: arial;
+	font-size: 16px;
+	color: #111;
+	line-height: 40px;
+}
+
+.add-question-form select {
+	width: 90%;
+	height: 40x;
+	padding: 0px 5%;
+	margin-bottom: 4px;
+	border: none;
+	background-color: #fff;
+	font-family: arial;
+	font-size: 16px;
+	color: #111;
+	line-height: 40px;
+}
+.add-question-form button {
+	display: block;
+	margin: 0 auto;
+	width: 30%;
+	height: 40px;
+	border: none;
+	background-color: #222;
+	font-family: arial;
+	font-size: 16px;
+	color: #fff;
+	line-height: 40px;
+	cursor: pointer;
+}
+.add-question-form button:hover {
+	background-color: #111;
+}
+
+/*  End of Add question form*/
 .quiz-button {
 	display: grid;
-	grid-template-columns: 50% 50%; 
+	grid-template-columns: 50% 50%;
 }
 .quiz-button-left {
 	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -282,3 +340,85 @@ header .nav-login a {
 	background: #ddd;
 }
 
+.box {
+  width: 40%;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.2);
+  padding: 35px;
+  border: 2px solid #fff;
+  border-radius: 20px/50px;
+  background-clip: padding-box;
+  text-align: center;
+}
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid #06D85F;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  background: #06D85F;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}

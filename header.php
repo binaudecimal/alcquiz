@@ -4,12 +4,12 @@
 	}
 ?>
 
-<!DOCTYPE html>	
+<!DOCTYPE html>
 	<head>
 		<link rel='stylesheet' type='text/css' href='style.css'>
 		<script src='js/jquery-3.3.1.min.js'></script>
 	</head>
-	
+
 	<body>
 		<header>
 			<nav>
@@ -20,7 +20,7 @@
 					<div class='nav-login'>
 						<?php
 							if(isset($_SESSION['u_username'])){
-								echo "<span>Hello! ". $_SESSION['u_first'] . ", you are a ". $_SESSION['u_type'] ."</span><form action='logout' method='POST'>
+								echo "<form action='logout' method='POST'>
 								<button type='submit' name='logout' accesskey='1'>LOGOUT</button>
 								</form>";
 							}
@@ -33,7 +33,7 @@
 								<a href='signup-form'>SIGNUP </a>";
 							}
 						?>
-						
+
 					</div>
 				</div>
 			</nav>
