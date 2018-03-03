@@ -122,7 +122,7 @@
 			}
 			else{
 				Controller::setSession();
-				$_SESSION['question_id'] = $question_row['question_id'];	
+				$_SESSION['question_id'] = $question_row['question_id'];
 				header('Location: quiz-take');
 				exit();
 			}
@@ -132,18 +132,59 @@
 			$pdo = self::connect();
 			try {
 			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$pdo->beginTransaction();
 			  $statement = $pdo->prepare("SELECT COUNT(*) from users WHERE type='STUDENT'");
 			  $statement->execute();
 			  $students = $statement->fetch()[0];
-			  
-			  $statement = $pdo->prepare("SELECT user_id, total_score FROM quiz_instance GROUP BY qinstance_id ORDER BY date_activated DESC, total_score DESC limit " .$students);
+
+			  $statement = $pdo->prepare("SELECT users.user_id, total_score, first, last FROM quiz_instance, users WHERE users.user_id = quiz_instance.user_id GROUP BY qinstance_id ORDER BY date_activated DESC, total_score DESC limit ?");
+				$statement->bindParam(1, $students, PDO::PARAM_INT);
+				$statement->execute();
+				$student_names = array();
+				$student_scores = array();
+				$data = $statement->fetchAll();
+				if($data){
+					foreach($data as $row){
+						$student_names[] = $row['last']. ', ' . $row['first'];
+						$student_scores[] = $row['total_score'];
+					}
+					$dataset = array('type'=>'bar', 'data'=>array('labels'=>$student_names, 'datasets'=>array(array('label'=>'Students', 'data'=>$student_scores))), 'options'=>array('scales'=>array('yAxes'=>array(array('ticks'=>array('beginAtZero'=>'true'))))));
+
+					return json_encode($dataset, JSON_NUMERIC_CHECK);
+				}
+				else return false;
+			} catch (Exception $e) {
+					echo 'error';
+					$pdo->rollBack();
+				//return false;
+			}
+		}
+
+		public static function selectAllQuestions(){
+			$pdo = self::connect();
+			try {
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			  $statement = $pdo->prepare("SELECT * from questions where active_status = true");
 				$statement->execute();
 				return $statement->fetchAll();
 			} catch (Exception $e) {
 			  	$pdo->rollBack();
-				//return false;
+					return false;
 			}
-		}		
+		}
+
+		public static function selectQuestion($question_id){
+			$pdo = self::connect();
+			try {
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			  $statement = $pdo->prepare("SELECT * from questions where active_status = true and question_id = ?");
+				$statement->execute(array($question_id));
+				return $statement->fetch();
+			} catch (Exception $e) {
+			  	$pdo->rollBack();
+					return false;
+			}
+		}
 
 		public static function updateScores($weighted_score, $ainstance_id){
 			$pdo = self::connect();
@@ -160,7 +201,7 @@
 			  $statement = $pdo->prepare('SELECT total_score FROM quiz_instance WHERE qinstance_id = ?');
 			  $statement->execute(array($qinstance_id));
 			  $total_score = $statement->fetch()['total_score'];
-			  
+
 			  $statement = $pdo->prepare('UPDATE answer_instance SET weighted_score = ? where ainstance_id = ?');
 			  $statement->execute(array($weighted_score, $ainstance_id));
 
@@ -174,6 +215,55 @@
 				return false;
 			}
 		}
+
+		public static function updateQuestion(){
+			$pdo = self::connect();
+			try {
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			  $pdo->beginTransaction();
+			  //sample
+				$question_id = $_POST['question_id'];
+				$question = $_POST['question'];
+				$answer_correct = $_POST['answer_correct'];
+				$answer_wrong1 = $_POST['answer_wrong1'];
+				$answer_wrong2 = $_POST['answer_wrong2'];
+				$answer_wrong3 = $_POST['answer_wrong3'];
+
+				$statement = $pdo->prepare('UPDATE questions SET question = ? where question_id = ?');
+				$statement->execute(array($question, $question_id));
+
+				$pdo->commit();
+				header('Location: populate-question?status=updateQuestion-success');
+				exit();
+			} catch (Exception $e) {
+			  $pdo->rollBack();
+				header('Location: populate-question?status=updateQuestion-failed');
+				exit();
+			}
+		}
+
+		public static function deleteQuestion(){
+			$pdo = self::connect();
+			try {
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				if(!isset($_GET['question_id'])){
+					header('Location: populate-question?status=delete-failed');
+					exit();
+				}
+				else{
+					$question_id = $_GET['question_id'];
+					$statement = $pdo->prepare("UPDATE questions SET active_status = 0 where question_id = ?");
+					$statement->execute(array($question_id));
+					header('Location: populate-question?status=delete-success');
+					exit();
+				}
+
+			} catch (Exception $e) {
+			  	$pdo->rollBack();
+					return false;
+			}
+		}
+
 		public static function query($query, $params = array()){
 			$statement = self::connect()->prepare($query);
 			$statement->execute($params);

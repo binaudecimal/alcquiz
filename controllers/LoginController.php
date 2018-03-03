@@ -28,10 +28,8 @@
 							$hashed_pwd_checked = password_verify($pwd, $row['password']);
 							if($hashed_pwd_checked == false){
 								//password not matched
-								var_dump($pwd);
-								var_dump($row['password']);
-								//header('Location: home?status=failedpw');
-								//exit();
+								header('Location: home?status=failedpw');
+								exit();
 							}
 							elseif ($hashed_pwd_checked == true){
 								//login

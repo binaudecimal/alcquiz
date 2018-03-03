@@ -1,16 +1,17 @@
-
 <?php
-	if(!isset($_SESSION)){
-		session_start();
-	}
-	$list = array();
-	if(isset($_SESSION['question_list'])){
-
-		$list = $_SESSION['question_list'];
-	}
-	else echo "not found";
+	Controller::setSession();
+	//populate the list
+	$list = Controller::selectAllQuestions();
 ?>
 
+<?php
+if(isset($_GET['status'])){
+	$status = $_GET['status'];
+	switch($status){
+		case 'updateQuestion-success': echo "<h2 class='status-green' style='color:green'>Question updated successfully.</h2>";break;
+	}
+}
+ ?>
 <div class='edit-question-table'>
 	<table>
 		<tr>
@@ -21,10 +22,10 @@
 			<td>Wrong Answer 2</td>
 			<td>Wrong Answer 3</td>
 			<td>Region</td>
-			<td>Edit</td>
+			<td></td>
 		</tr>
 		<?php
-			if(!isset($_SESSION['question_list'])){
+			if(!$list){
 				echo "
 					<tr>
 						<td>N/A</td>
@@ -36,7 +37,7 @@
 						<td>N/A</td>
 						<td></td>
 					</tr>
-				";	
+				";
 			}
 			else{ //populate
 				foreach($list as $row){
@@ -49,11 +50,11 @@
 							<td>". $row['answer_wrong2']."</td>
 							<td>". $row['answer_wrong3']."</td>
 							<td>". $row['region']."</td>
-							<td><a href='question-edit?question_id=". $row['question_id'] ."'>Edit</a></td>
+							<td><a href='edit-question?question_id=". $row['question_id'] ."'>Edit</a></td>
 						</tr>
 					";
 				}
 			}
 		?>
-	</table>	
+	</table>
 </div>

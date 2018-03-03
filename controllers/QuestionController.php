@@ -25,18 +25,19 @@
 			}
 		}
 
-		public static function populate(){
+		public static function populateQuestions(){
 			if(!isset($_SESSION)){
 				session_start();
 			}
 			$sql = "SELECT * from questions;";
-			$question_list = self::query($sql);
+			$statement = $pdo->prepare('SELECT * from questions where active_status = true');
+			$statement->execute();
+			$question_list = $statement->fetchAll(FETCH_ASSOC);
 			//	var_dump($question_list);
 			$_SESSION['question_list'] = $question_list;
 			//$this::set('question_list', $question_list);
-			header('Location: question-edit-list');
-			exit();
 		}
+
 
 		public static function activateQuiz(){
 			if(isset($_POST['activate-quiz-submit'])){
@@ -56,17 +57,24 @@
 			self::setSession();
 			$region = $_GET['region'];
 			$user_id = $_SESSION['u_user_id'];
+			//check for active quiz, then check for
+			if(self::fetch("SELECT * from quiz_instance where user_id = ? and region = ? and date_finished is NOT NULL",array($user_id, $region))){
+				header('Location: home?status=quiz-taken');
+				exit();
+			}
 			$data = self::fetch("SELECT * from quiz_instance where user_id = ? and date_finished is NULL", array($user_id));
-			
+
 			if($data != false){
 				//quiz active check for region
 				$qinstance_id = $data['qinstance_id'];
+
 				if($data['region'] == null){
 					$limit = $data['items'];
 					self::insertQuiz($user_id, $qinstance_id, $region, $limit);
 				}
 				$_SESSION['qinstance_id'] = $qinstance_id;
 				self::selectNextQuestion($qinstance_id);
+
 			}
 			else{
 				header('Location: home?status=startQuiz-failed2');

@@ -1,28 +1,28 @@
 <?php
 	$data = Controller::selectTopStudents();
-	var_dump($data);
-
 ?>
 <script>
+
 	function fetchItem(){
 			var get = document.getElementById('item').value;
 			document.getElementById('item-input').value=get;
-	}
+	};
 
 	function fetchDuration(){
 			var get = document.getElementById('duration').value;
 			document.getElementById('duration-input').value=get;
-	}
+	};
 
 	function fetchItemInput(){
 			var get = document.getElementById('item-input').value;
 			document.getElementById('item').value=get;
-	}
+	};
 
 	function fetchDurationInput(){
 			var get = document.getElementById('duration-input').value;
 			document.getElementById('duration').value=get;
-	}
+	};
+
 	$(document).ready(function(){
 			 //$('#item').val($('#item-input').val());
 			 itemValue = $('#item').val();
@@ -30,23 +30,28 @@
 			 $('#item-input').val(itemValue);
 			 $('#duration-input').val(durationValue);
 	});
-
+	$(document).ready(function(){
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctx, <?php  echo $data?>);
+		Chart.defaults.scale.ticks.beginAtZero = true;
+	});
 </script>
 <div class='main-wrapper'>
 	<div class='teacher-buttons'>
 		<form action='add-question-form' method='POST'>
 			<button type='submit' name='addQuestion'>Add Question </button>
 		</form>
-		<form action='edit-question-populate' method='POST'>
+		<form action='populate-question' method='POST'>
 			<button type='submit' name='editQuestion'>Edit Question </button>
 		</form>
-
+		<!--
+		Insert the status part here
+		-->
+		
 		<a href='#popup1' accesskey="a">Activate Quiz for Students</a>
 	</div>
-	<div class='dashboard-space'>
-		<canvas id='chart' width='400' height='400'>
-		</canvas>
-	</div>
+	<canvas id='myChart' width='400' height='400'>
+	</canvas>
 	<div id="popup1" class="overlay">
 		<div class="popup">
 			<h2>Start Quiz</h2>

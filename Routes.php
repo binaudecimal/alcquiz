@@ -53,7 +53,22 @@
 	Route::set('quiz-answer', function(){
 		QuestionController::processAnswer();
 	});
+	//populate $question_set
+	Route::set('populate-question', function(){
+		Controller::createView('edit-question');
+	});
 
+	Route::set('edit-question', function(){
+		Controller::createView('edit-question-form');
+	});
+
+	Route::set('update-question', function(){
+		QuestionController::updateQuestion();
+	});
+
+	Route::set('delete-question', function(){
+		QuestionController::deleteQuestion();
+	});
 
 
 
