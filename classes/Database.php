@@ -12,7 +12,7 @@
 			return $pdo;
 		}
 
-		public static function insertSignup($username, $password, $first, $last, $type){ //return true if success, fail if not
+		public static function insertSignup($first, $last, $username, $password, $type){ //return true if success, fail if not
 			$pdo = self::connect();
 			try {
 			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -54,7 +54,7 @@
 
 					foreach($students as $row){
 						$user_id = $row['user_id'];
-						$statement = $pdo->prepare("INSERT into quiz_instance (user_id, items, duration) values (?,?,?)");
+						$statement = $pdo->prepare("INSERT into quiz_instance (user_id, items, duration, date_activated) values (?,?,?, NOW())");
 						$statement->execute(array($user_id, $items, $duration));
 					}
 					$pdo->commit();
@@ -110,15 +110,67 @@
 
 		public static function selectNextQuestion($qinstance_id){
 			$pdo = self::connect();
-			$question_row = self::fetch("SELECT question_id from answer_instance where qinstance_id = ? and weighted_score is NULL order by RAND() limit 1",array($qinstance_id));
-			if($question_row!= false){
-				Controller::setSession();
-				$_SESSION['question_id'] = $question_row['question_id'];
-				$_SESSION['qinstance_id'] = $qinstance_id;
-				return true;
+			$question_row = self::fetch("SELECT question_id, ainstance_id from answer_instance where qinstance_id = ? and weighted_score is NULL order by RAND() limit 1",array($qinstance_id));
+			if(!$question_row){
+				//check if null or not
+				if(self::fetch("SELECT * from quiz_instance where qinstance_id = ? and date_finished is NULL", array($qinstance_id))){
+					//update date finished
+					self::query("UPDATE quiz_instance SET date_finished = NOW() WHERE qinstance_id = ?",array($qinstance_id));
+				}
+				header('Location: home?status=quiz-complete');
+				exit();
 			}
 			else{
-				//must be done, set quiz to date_finished
+				Controller::setSession();
+				$_SESSION['question_id'] = $question_row['question_id'];	
+				header('Location: quiz-take');
+				exit();
+			}
+		}
+
+		public static function selectTopStudents(){
+			$pdo = self::connect();
+			try {
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			  $statement = $pdo->prepare("SELECT COUNT(*) from users WHERE type='STUDENT'");
+			  $statement->execute();
+			  $students = $statement->fetch()[0];
+			  
+			  $statement = $pdo->prepare("SELECT user_id, total_score FROM quiz_instance GROUP BY qinstance_id ORDER BY date_activated DESC, total_score DESC limit " .$students);
+				$statement->execute();
+				return $statement->fetchAll();
+			} catch (Exception $e) {
+			  	$pdo->rollBack();
+				//return false;
+			}
+		}		
+
+		public static function updateScores($weighted_score, $ainstance_id){
+			$pdo = self::connect();
+			try {
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			  $pdo->beginTransaction();
+			  //sample
+			  $statement = $pdo->prepare('SELECT qinstance_id FROM answer_instance where ainstance_id = ?');
+			  $statement->execute(array($ainstance_id));
+			  $ainstance_row = $statement->fetch();
+			  $qinstance_id = $ainstance_row['qinstance_id'];
+
+			  //get qinstance id
+			  $statement = $pdo->prepare('SELECT total_score FROM quiz_instance WHERE qinstance_id = ?');
+			  $statement->execute(array($qinstance_id));
+			  $total_score = $statement->fetch()['total_score'];
+			  
+			  $statement = $pdo->prepare('UPDATE answer_instance SET weighted_score = ? where ainstance_id = ?');
+			  $statement->execute(array($weighted_score, $ainstance_id));
+
+			  $statement = $pdo->prepare('UPDATE quiz_instance SET total_score = ? where qinstance_id = ?');
+			  $statement->execute(array(($total_score + $weighted_score), $qinstance_id));
+
+			  $pdo->commit();
+				return true;
+			} catch (Exception $e) {
+			  $pdo->rollBack();
 				return false;
 			}
 		}

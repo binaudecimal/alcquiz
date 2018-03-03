@@ -57,7 +57,7 @@
 			$region = $_GET['region'];
 			$user_id = $_SESSION['u_user_id'];
 			$data = self::fetch("SELECT * from quiz_instance where user_id = ? and date_finished is NULL", array($user_id));
-
+			
 			if($data != false){
 				//quiz active check for region
 				$qinstance_id = $data['qinstance_id'];
@@ -65,14 +65,8 @@
 					$limit = $data['items'];
 					self::insertQuiz($user_id, $qinstance_id, $region, $limit);
 				}
-				if(self::selectNextQuestion($qinstance_id)){
-					header('Location: quiz-take');
-					exit();
-				}
-				else{
-					header('Location: home?status=quizTake=complete');
-					exit();
-				}
+				$_SESSION['qinstance_id'] = $qinstance_id;
+				self::selectNextQuestion($qinstance_id);
 			}
 			else{
 				header('Location: home?status=startQuiz-failed2');
@@ -89,17 +83,13 @@
 				$qinstance_id = $_SESSION['qinstance_id'];
 				$question_id = $_SESSION['question_id'];
 				$user_id = $_SESSION['u_user_id'];
-
-				$ainstance_row = self::fetch("SELECT * from answer_instance where user_id = ? and qinstance_id = ? and question_id = ? and weighted_score is NULL", array($user_id, $qinstance_id, $question_id));
-				$quiz_row = self::fetch("SELECT * from questions where question_id = ?",array($question_id));
-				$weighted_score = ($answer == $quiz_row['answer_correct']) ? 1.0 : 0.0;
-				self::query("UPDATE answer_instance set weighted_score = ? where ainstance_id = ?",array($weighted_score, $ainstance_row['ainstance_id']));
-				$qinstance_row = self::fetch('SELECT * from quiz_instance where qinstance_id = ?', array($qinstance_id));
-				$qinstance_score = ($qinstance_row['total_score'] == null)? 0 : 1;
-				$qinstance_score += $weighted_score;
-				self::query("UPDATE quiz_instance set total_score = ? where qinstance_id = ?",array($qinstance_score,$qinstance_id));
-				header('Location: start-quiz');
-				exit();
+				$answer_row = self::fetch("SELECT answer_correct from questions where question_id = ? ",array( $question_id));
+				$weighted_score = ($answer_row['answer_correct'] == $answer)? 1.0 : 0.0 ;
+				//get ainstance_id
+				$ainstance_id = self::fetch("SELECT * from answer_instance where qinstance_id = ? and question_id = ?",array($qinstance_id, $question_id))['ainstance_id'];
+				//get total score
+				self::updateScores($weighted_score, $ainstance_id);
+				self::selectNextQuestion($qinstance_id);
 			}
 		}
 

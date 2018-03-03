@@ -21,7 +21,7 @@
 			<?php
 				foreach ($answers as $row) {
 					//remove quotes
-					echo "  <a href='quiz-answer?answer=".$row."''> ". $row ." </a><br>";
+					echo "<a href='quiz-answer?answer=".$row."''> ". $row ." </a><br>";
 				}
 			?>
 			</span>

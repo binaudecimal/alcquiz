@@ -28,8 +28,10 @@
 							$hashed_pwd_checked = password_verify($pwd, $row['password']);
 							if($hashed_pwd_checked == false){
 								//password not matched
-								header('Location: ../home?status=failed');
-								exit();
+								var_dump($pwd);
+								var_dump($row['password']);
+								//header('Location: home?status=failedpw');
+								//exit();
 							}
 							elseif ($hashed_pwd_checked == true){
 								//login
@@ -78,7 +80,7 @@
 					else{
 						//user not used
 						$hashed_pwd = password_hash($pwd, PASSWORD_DEFAULT);
-						if(self::insertSignup($first, $last, $uid, $pwd, $type)){
+						if(self::insertSignup($first, $last, $uid, $hashed_pwd, $type)){
 								header('Location: signup-form?status=signup-success');
 								exit();
 						}
