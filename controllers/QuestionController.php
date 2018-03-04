@@ -83,11 +83,11 @@
 		}
 		public static function processAnswer(){
 			self::setSession();
-			if(!isset($_GET['answer'])){
+			if(!isset($_POST['answer'])){
 				echo "something wrong";
 			}
 			else{
-				$answer = $_GET['answer'];
+				$answer = trim($_POST['answer']);
 				$qinstance_id = $_SESSION['qinstance_id'];
 				$question_id = $_SESSION['question_id'];
 				$user_id = $_SESSION['u_user_id'];

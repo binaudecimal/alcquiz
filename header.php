@@ -16,13 +16,13 @@
 			<nav>
 				<div class='main-wrapper'>
 					<ul>
-						<li><a href='index'>HOME </a> </li>
+						<li><a href='index' accesskey="1">HOME </a> </li>
 					</ul>
 					<div class='nav-login'>
 						<?php
 							if(isset($_SESSION['u_username'])){
 								echo "<form action='logout' method='POST'>
-								<button type='submit' name='logout' accesskey='1'>LOGOUT</button>
+								<button type='submit' name='logout' accesskey='2'>LOGOUT</button>
 								</form>";
 							}
 							else{

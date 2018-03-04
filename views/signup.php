@@ -1,8 +1,7 @@
 <?php
 	include_once 'header.php';
 ?>
-<section class='main-container'>
-			<div class='main-wrapper'>
+			<div class='signup-form-wrapper'>
 				<h2>SIGNUP</h2>
 				<?php
 					if(isset($_GET['status'])){
@@ -26,9 +25,3 @@
 					<button type='submit' name='signup-submit'>Sign up</button>
 				</form>
 			</div>
-		</section>
-	</body>
-<html>
-<?php
-	include_once 'footer.php';
-?>

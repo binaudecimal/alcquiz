@@ -9,7 +9,7 @@
   }
 ?>
 
-<div class='edit-question-form'>
+<div class='edit-question-form-wrapper'>
 	<h2>Add Question</h2>
 		<form action='update-question' method='POST'>
       <input type='hidden' value='<?php echo $question_id;?>' name='question_id'>
@@ -21,8 +21,9 @@
 		<input type='text' name='answer_wrong3' placeholder='Wrong Answer'required value='<?php echo $question_row['answer_wrong3'];?>'>
 		<button type='submit'>SUBMIT</button>
 	</form>
+  <a href=#delete-confirm>DELETE</a>
 </div>
-<a href=#delete-confirm>DELETE QUESTION</a>
+
 <div id="delete-confirm" class="overlay">
   <div class="popup">
     <h2>Start Quiz</h2>
@@ -31,7 +32,7 @@
       <p>
         This question will be disabled on all further quizzes. Do you with to continue?
       </p>
-        <a href='delete-question?question_id=<?php echo $question_id;?>'>CONFIRM DELETE</a>
     </div>
+    <a id='conf-del' href='delete-question?question_id=<?php echo $question_id;?>'>CONFIRM DELETE</a>
   </div>
 </div>

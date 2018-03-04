@@ -198,7 +198,7 @@ header .nav-login a {
 	text-align: center;
 }
 
-/* signup */
+/*add question */
 
 .add-question-form {
 	width: 400px;
@@ -224,7 +224,7 @@ header .nav-login a {
 	width: 30%;
 	height: 40px;
 	border: none;
-	background-color: #222;
+	background-color: #444;
 	font-family: arial;
 	font-size: 16px;
 	color: #fff;
@@ -243,27 +243,9 @@ header .nav-login a {
 	line-height: 50px;
 	text-align: center;
 }
-.add-question-form {
-	width: 400px;
-	margin: 0 auto;
-	padding-top: 30px;
-
-}
-.add-question-form input {
-	width: 90%;
-	height: 40x;
-	padding: 0px 5%;
-	margin-bottom: 4px;
-	border: none;
-	background-color: #fff;
-	font-family: arial;
-	font-size: 16px;
-	color: #111;
-	line-height: 40px;
-}
 
 .add-question-form select {
-	width: 90%;
+	width: 100%;
 	height: 40x;
 	padding: 0px 5%;
 	margin-bottom: 4px;
@@ -274,23 +256,6 @@ header .nav-login a {
 	color: #111;
 	line-height: 40px;
 }
-.add-question-form button {
-	display: block;
-	margin: 0 auto;
-	width: 30%;
-	height: 40px;
-	border: none;
-	background-color: #222;
-	font-family: arial;
-	font-size: 16px;
-	color: #fff;
-	line-height: 40px;
-	cursor: pointer;
-}
-.add-question-form button:hover {
-	background-color: #111;
-}
-
 /*  End of Add question form*/
 .quiz-button {
 	display: grid;
@@ -421,4 +386,287 @@ header .nav-login a {
   .popup{
     width: 70%;
   }
+}
+
+.teacher-home-wrapper {
+	background: #eee;
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  margin: 30px;
+  grid-template-areas:
+  "teacher-buttons filler"
+  "status status"
+  "dashboard chats"
+  "dashboard logs"
+  ;
+  grid-gap: 1em;
+}
+
+.teacher-buttons {
+  grid-area: teacher-buttons;
+  display: grid;
+  padding: 1em;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  grid-gap: 1em;
+}
+
+.teacher-buttons button{
+  margin: auto;
+  height: 50px;
+  width: 100%;
+}
+
+.teacher-buttons a {
+  margin: auto;
+  display: block;
+  text-decoration: none;
+  line-height: 16px;
+  font-family: roboto;
+}
+
+.filler {
+  grid-area: filler;
+}
+
+.teacher-home-status {
+  grid-area: status;
+}
+
+.dashboard {
+  grid-area: dashboard;
+}
+
+.chats {
+  grid-area: chats;
+}
+
+.logs {
+  grid-area: logs;
+}
+
+/*  Student start*/
+.student-home-wrapper {
+  display: grid;
+  width: 100%;
+  height: auto;
+  grid-template-rows: 100%;
+  grid-template-columns: 25% 50% 25%;
+  grid-template-areas:
+  "buttons-left philippine-map buttons-right";
+}
+
+.quiz-button-left {
+  grid-area: buttons-left;
+  display:grid;
+  grid-gap: 1em 0;
+  margin:auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.quiz-button-right{
+  grid-area: buttons-right;
+  display:grid;
+  grid-gap: 1em 0;
+  margin: auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.philippine-map {
+  grid-area: philippine-map;
+  padding: auto;
+}
+
+.philippine-map img {
+  max-height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+  background: #e1e1e1;
+  padding: 1em;
+  border: 1px inset #b1b1b1;
+  border-radius: 5px;
+}
+
+/*  Signup form*/
+.signup-form-wrapper {
+	width: 400px;
+	margin: 0 auto;
+	padding-top: 30px;
+
+}
+.signup-form-wrapper input {
+	width: 90%;
+	height: 40x;
+	padding: 0px 5%;
+	margin-bottom: 4px;
+	border: none;
+	background-color: #fff;
+	font-family: arial;
+	font-size: 16px;
+	color: #111;
+	line-height: 40px;
+}
+.signup-form-wrapper button {
+	display: block;
+	margin: 0 auto;
+	width: 30%;
+	height: 40px;
+	border: none;
+	background-color: #444;
+	font-family: arial;
+	font-size: 16px;
+	color: #fff;
+	line-height: 40px;
+	cursor: pointer;
+}
+.signup-form-wrapper button:hover {
+	background-color: #111;
+}
+/*  Add question form */
+.signup-form-wrapper h2 {
+	padding-top: 40px;
+	font-family: arial;
+	fon-size: 40px;
+	color: #111;
+	line-height: 50px;
+	text-align: center;
+}
+.signup-form-wrapper select {
+  width: 100%;
+	height: 40x;
+	padding: 0px 5%;
+	margin-bottom: 4px;
+	border: none;
+	background-color: #fff;
+	font-family: arial;
+	font-size: 16px;
+	color: #111;
+	line-height: 40px;
+}
+/* edit table */
+.edit-question-table {
+  background: : #FFF;
+  margin: 0 auto;
+}
+.edit-question-table {
+  font-family: roboto;
+  font-size: 16px;
+}
+
+.edit-question-table a {
+  text-decoration: none;
+  display: block;
+  color: #fff;
+  background: #777;
+  cursor: pointer;
+  margin: 0;
+  padding: 1px;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+.edit-question-table table, th, td {
+  border:1px solid black;
+  border=collapse: collapse;
+  padding: 5px;
+}
+.edit-question-table tr:nth-child(odd){
+  background-color: #ddd;
+}
+.edit-question-table tr:nth-child(even){
+  background-color: #FFF;
+}
+/* edit question form */
+
+.edit-question-form-wrapper {
+	width: 400px;
+	margin: 0 auto;
+	padding-top: 30px;
+  display:block;
+
+}
+.edit-question-form-wrapper input {
+	width: 90%;
+	height: 40x;
+	padding: 0px 5%;
+	margin-bottom: 4px;
+	border: none;
+	background-color: #fff;
+	font-family: arial;
+	font-size: 16px;
+	color: #111;
+	line-height: 40px;
+}
+.edit-question-form-wrapper button {
+	display: block;
+	margin: 0 auto;
+	width: 30%;
+	height: 40px;
+	border: none;
+	background-color: #444;
+	font-family: arial;
+	font-size: 16px;
+	color: #fff;
+	line-height: 40px;
+	cursor: pointer;
+}
+.edit-question-form-wrapper button:hover {
+	background-color: #111;
+}
+/*  Add question form */
+.edit-question-form-wrapper h2 {
+	padding-top: 40px;
+	font-family: arial;
+	fon-size: 40px;
+	color: #111;
+	line-height: 50px;
+	text-align: center;
+}
+.edit-question-form-wrapper select {
+  width: 100%;
+	height: 40x;
+	padding: 0px 5%;
+	margin-bottom: 4px;
+	border: none;
+	background-color: #fff;
+	font-family: arial;
+	font-size: 16px;
+	color: #111;
+	line-height: 40px;
+}
+
+.edit-question-form-wrapper a {
+  text-decoration: none;
+  background: #900;
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 1px;
+  margin:auto;
+
+  font-family: arial;
+  font-size: 12px;
+}
+/*  *the popup*/
+
+.content {
+  margin: auto;
+  padding: 1px;
+}
+
+.popup #conf-del {
+  display: block;
+  text-decoration: none;
+  background: #900;
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 1px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: arial;
+  font-size: 16px;
 }
