@@ -451,7 +451,8 @@ header .nav-login a {
 .student-home-wrapper {
   display: grid;
   width: 100%;
-  height: auto;
+  height: 100%;
+  margin: 1em;
   grid-template-rows: 100%;
   grid-template-columns: 25% 50% 25%;
   grid-template-areas:
@@ -460,7 +461,7 @@ header .nav-login a {
 
 .quiz-button-left {
   grid-area: buttons-left;
-  display:grid;
+  display: grid;
   grid-gap: 1em 0;
   margin:auto;
   grid-template-columns: 1fr;
@@ -669,4 +670,107 @@ header .nav-login a {
   text-align: center;
   font-family: arial;
   font-size: 16px;
+}
+
+/*  Quiz take */
+.quiz-take-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 8fr 1fr;
+  grid-template-rows: 2fr 3fr 2fr;
+  grid-template-areas:
+  "question-number question-region question-timer"
+  "question-question question-question question-question"
+  "question-answers question-answers question-answers"
+  ;
+  width: 100%;
+}
+
+.question-answers {
+  grid-area: question-answers;
+  display: flex;
+
+  padding: 3px;
+  width: 80%;
+  height: minmax(100px, auto);
+  margin: 0 auto;
+}
+.question-answers button {
+  float:left;
+  display: inline;
+  margin: 0 1%;
+  padding: 3px;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  text-align: center;
+  font-family: arial;
+  font-size: 16px;
+}
+
+.question-question {
+  grid-area: question-question;
+  display: block;
+  padding: 1em;
+  margin: 1em;
+  border: 1px dotted #414141;
+  background: #ddd;
+}
+
+.question-question p {
+  font-family: arial;
+  font-size: 18px;
+  text-align: left;
+  padding-left: 1em;
+}
+.question-number {
+  grid-area: question-number;
+  display: block;
+  float: left;
+  margin: 1px 1em;
+  padding: 5px
+}
+
+.question-number h4 {
+  font-family: arial;
+  font-size: 16px;
+  width: auto;
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.question-region {
+  grid-area: question-region;
+  display: block;
+}
+.question-region h2 {
+  margin: 5px;
+  padding: 3px;
+  padding-left: 3em;
+  font-family: arial;
+  font-size: 20px;
+  text-align: left;
+}
+.question-timer {
+  grid-area: question-timer;
+  display: flex;
+  margin: 1px 1em;
+  padding: 5px;
+}
+
+.question-timer input {
+  display: inline;
+  width: 30%;
+  font-family: arial;
+  font-size: 16px;
+  text-align: center;
+}
+
+.question-timer h4 {
+  display: inline;
+  width: 70%;
+  font-family: arial;
+  font-size: 16px;
+  text-align: center;
+  margin: auto;
 }

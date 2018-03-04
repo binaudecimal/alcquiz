@@ -7,9 +7,10 @@
 	$answers = array($question_row['answer_correct'],$question_row['answer_wrong1'],$question_row['answer_wrong2'],$question_row['answer_wrong3']);
 	shuffle($answers);
 	$timer = $qinstance_row['duration'];
+	$question_number = Controller::selectQuestionNumber($qinstance_id);
+	//var_dump($question_number);
 ?>
 <script>
-
 	$(document).ready(function(){
 		var x = <?php echo $timer; ?>;
 		$('#timer').val(x);
@@ -29,14 +30,26 @@
 		});
 	});
 </script>
-<div class='main-wrapper'>
-	<div class='question-space'>
-		<h4 class='question-region'><?php  echo $question_row['region'];?></h4>
-		<form action='quiz-answer' method='POST' class='answer-form'>
-			<input type='text' disabled='true' name='timer' value'<?php echo $timer;?>' id='timer'>
+<form action='quiz-answer' method='POST' class='answer-form'>
+<div class='quiz-take-wrapper'>
+	<div class='question-number'>
+		<!-- Question number here -->
+		<h4>Question Number: <?php echo $question_number;?></h4>
+	</div>
+	<div class='question-region'>
+		<h2 class='question-region'><?php  echo $question_row['region'];?></h2>
+	</div>
+
+	<div class='question-timer'>
+		<h4>Time left:</h4>
+		<input type='text' disabled='true' name='timer' value'<?php echo $timer;?>' id='timer'>
+	</div>
+	<div class='question-question'>
+		<p> <?php echo $question_row['question']; ?></p>
+	</div>
+
+	<div class='question-answers'>
 			<input type='hidden' value='' name='answer' id='answer-value'>
-			<p> <?php echo $question_row['question']; ?></p>
-			<br>
 			<button class='answer' type='button' accesskey="z"><?php echo $answers[0]?></button>
 			<button class='answer' type='button' accesskey="x"><?php echo $answers[1]?></button>
 			<button class='answer' type='button' accesskey="c"><?php echo $answers[2]?></button>

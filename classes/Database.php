@@ -186,6 +186,20 @@
 			}
 		}
 
+		public static function selectQuestionNumber($qinstance_id){
+			$pdo = self::connect();
+			try {
+
+			  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			  $statement = $pdo->prepare("select count(*) from answer_instance where qinstance_id = ? and weighted_score is not null");
+				$statement->execute(array($qinstance_id));
+				return $statement->fetch()[0]+1;
+			} catch (Exception $e) {
+			  	$pdo->rollBack();
+					return false;
+			}
+		}
+
 		public static function updateScores($weighted_score, $ainstance_id){
 			$pdo = self::connect();
 			try {
