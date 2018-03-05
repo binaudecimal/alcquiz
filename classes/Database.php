@@ -200,6 +200,16 @@
 			}
 		}
 
+		public static function selectStudentScores($user_id){
+			$pdo = self::connect();
+		  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+			$statement = $pdo->prepare("SELECT region, total_score FROM quiz_instance where region is NOT NULL and user_id = ?");
+			$statement->execute(array($user_id));
+			$scores = $statement->fetchAll();
+			return ($scores) ? $scores: false;
+		}
+
 		public static function updateScores($weighted_score, $ainstance_id){
 			$pdo = self::connect();
 			try {
@@ -317,7 +327,6 @@
 			$data = $statement->fetch(PDO::FETCH_ASSOC);
 			return $data;
 		}
-
 
 	}
 ?>

@@ -45,13 +45,8 @@
 		// Websocket
 		var websocket_server = new WebSocket("ws://localhost:8080/");
 		websocket_server.onopen = function(e) {
-			websocket_server.send(
-				JSON.stringify({
-					'type':'socket',
-					'user_id':<?php echo $session; ?>
-				})
-			);
-		};
+			console.log("connected");
+		}
 		websocket_server.onerror = function(e) {
 			// Errorhandling
 		}
@@ -62,33 +57,17 @@
 				case 'chat':
 					$('#chat_output').append(json.msg);
 					break;
+				case 'logs':
+					$('#logs').append(json.msg);
+					console.log($("#logs"));
+					break;
 			}
 		}
 		// Events
-		$('#chat_input').on('keyup',function(e){
-			if(e.keyCode==13 && !e.shiftKey)
-			{
-				var chat_msg = $(this).val();
-				websocket_server.send(
-					JSON.stringify({
-						'type':'chat',
-						'user_id':<?php echo $session; ?>,
-						'chat_msg':chat_msg
-					})
-				);
-				$(this).val('');
-			}
-		});
 	});
 	//eof
 </script>
-<style type="text/css">
-* {margin:0;padding:0;box-sizing:border-box;font-family:arial,sans-serif;resize:none;}
-html,body {width:100%;height:100%;}
-#wrapper {position:relative;margin:auto;max-width:1000px;height:100%;}
-#chat_output {position:absolute;top:0;left:0;padding:20px;width:100%;height:calc(100% - 100px);}
-#chat_input {position:absolute;bottom:0;left:0;padding:10px;width:100%;height:100px;border:1px solid #ccc;}
-</style>
+
 <div class='teacher-home-wrapper'>
 		<div class='teacher-buttons'>
 			<form action='add-question-form' method='POST'>
@@ -98,7 +77,7 @@ html,body {width:100%;height:100%;}
 			<form action='populate-question' method='POST'>
 				<button type='submit' name='editQuestion'>Edit Question </button>
 			</form>
-			<a href='#popup1' accesskey="a">Activate Quiz for Students</a>
+			<a href='#popup1' accesskey="a">Start New Quiz</a>
 		</div>
 		<div class='filler'></div>
 		<div class='teacher-home-status'>
@@ -112,14 +91,11 @@ html,body {width:100%;height:100%;}
 		</div>
 
 
-		<div class='chats'>
-			<div id="wrapper">
-				<div id="chat_output"></div>
-				<textarea id="chat_input" placeholder="Deine Nachricht..."></textarea>
-			</div>
+		<div class='chats' id="chat_output" overflow='scroll'>
+			<!-- chats here -->
 		</div>
 
-		<div class='logs'>
+		<div class='logs' id='logs'>
 			<!-- logs here-->
 		</div>
 

@@ -46,6 +46,22 @@ class Chat implements MessageComponentInterface {
 					}
 				}
 				break;
+				//for logs
+				case 'logs':
+					$user_id = $data->user_id;
+					$chat_msg = $data->chat_msg;
+					$response_from = "<span style='color:#999'><b>".$user_id.":</b> ".$chat_msg."</span><br><br>";
+					$response_to = "<b>".$user_id."</b>: ".$chat_msg."<br><br>";
+					// Output
+					$from->send(json_encode(array("type"=>$type,"msg"=>$response_from)));
+					foreach($this->clients as $client)
+					{
+						if($from!=$client)
+						{
+							$client->send(json_encode(array("type"=>$type,"msg"=>$response_to)));
+						}
+					}
+					break;
 		}
 	}
 

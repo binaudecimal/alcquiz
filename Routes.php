@@ -70,6 +70,8 @@
 		QuestionController::deleteQuestion();
 	});
 
-
+	Route::set('ping', function(){
+		Controller::createView('ping');
+	});
 
 ?>
