@@ -1,5 +1,9 @@
 <?php
-	Route::set('index', function(){
+	Route::set('', function(){
+		header('Location: home');
+		exit();
+	});
+    Route::set('index', function(){
 		header('Location: home');
 		exit();
 	});

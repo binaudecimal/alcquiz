@@ -8,10 +8,10 @@
 			if($status){
 				switch($status){
 					case 'questionAdd-success':
-						echo "<h2 class='status-green'>Question added successfully.</h2>";
+						echo "<div class='alert alert-success' role='alert'>Question added Successfully!</div>";
 						break;
 					case 'empty':
-						echo "<h2 class='status-red'>There are required fields that are empty.</h2>";
+						echo "<div class='alert alert-warning' role='alert'>There are required fields that are blank.</div>";
 						break;
 
 				}

@@ -68,54 +68,95 @@
 	//eof
 </script>
 
-<div class='teacher-home-wrapper'>
-		<div class='teacher-buttons'>
-			<form action='add-question-form' method='POST'>
-				<button type='submit' name='addQuestion'>Add Question </button>
-			</form>
+<div class='container'>
+		<div class='row'>
+            <div class='col-9'>
+                <div class='row'>
+                    <div class='btn-group' role='group'>
+                        <form action='add-question-form' method='POST'>
+                            <button type='submit' name='addQuestion' class='btn btn-light btn-lg'>Add Question</button>
+                        </form>
 
-			<form action='populate-question' method='POST'>
-				<button type='submit' name='editQuestion'>Edit Question </button>
-			</form>
-			<a href='#popup1' accesskey="a">Start New Quiz</a>
+                        <form action='populate-question' method='POST'>
+                            <button type='submit' name='editQuestion' class='btn btn-light btn-lg'>Edit Question</button>
+                        </form>
+                        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#quizModal">
+                              Activate Quiz
+                            </button>
+                        
+                    </div>
+                </div>
+            </div>
+		</div> <!-- row of buttons-->
+        <div class='row'> <!-- Row of status -->
+            <!-- insert status here -->
+        </div>
+        <div class='row'> <!-- Row of chart and logs -->
+            <div class='col-9'>
+                <div class='container'>
+                    <div class='dashboard'>
+                    <canvas id='myChart' width='400' height='400'>
+                    </canvas>
+                
+                </div>
+            </div>
 		</div>
-		<div class='filler'></div>
-		<div class='teacher-home-status'>
-			<!-- status here-->
-
-		</div>
-
-		<div class='dashboard'>
-			<canvas id='myChart' width='400' height='400'>
-			</canvas>
-		</div>
-
-
-		<div class='chats' id="chat_output" overflow='scroll'>
-			<!-- chats here -->
-		</div>
-
-		<div class='logs' id='logs'>
-			<!-- logs here-->
-		</div>
-
-		<div id="popup1" class="overlay">
-			<div class="popup">
-				<h2>Start Quiz</h2>
-				<a class="close" href="#">&times;</a>
-				<div class="content">
-					<p>
-						Do you wish to start a quiz for all of the students? All active quiz
-						will be marked complete and scores will be finalized.
-					</p>
-					<form action='activate-quiz' method='POST'>
-						<input type='range' name='items' min='5' max='15' label='Items: ' id='item' onchange='fetchItem()'><input type='text' id='item-input' name='item-input' onchange="fetchItemInput()"><br>
-						<input type='range' name='duration' min='5' max='15' label='Duration: ' id='duration' onchange='fetchDuration()'><input type='text' id='duration-input' name='duration-input' onchange="fetchDurationInput()"></p><br>
-						<button type='submit' name='activate-quiz-submit' accesskey="q">ACTIVATE QUIZ</button>
-					</form>
-				</div>
+            <div class='col-3'>
+                <div class='container'>
+                    <div class='row'> <!-- row of chats -->
+                        <div class='col-3'>
+                            <div class='container bg-primary'>
+                                <div class='chats' id="chat_output" overflow='scroll'>
+                                    <!-- chats here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row'> <!-- row of logs -->
+                        <div class='col-3'>
+                            <div class='container bg-auto'>
+                                <div class='logs' id='logs'>
+                                    <!-- logs here-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+		<div id="quizModal" class="modal fade" role='dialog' tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class='modal-dialog'>
+                <div class='modal-content'>
+                    <div class='modal-header'>
+				        <h5 class='modal-title'>Start Quiz</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class='modal-body'>
+                        <p class='lead'>
+                            Do you wish to start a quiz for all of the students? All active quiz
+                            will be marked complete and scores will be finalized.
+                        </p>
+                    </div>
+                    <div class='modal-footer'>
+                        <form action='activate-quiz' method='POST'>
+                            <div class='row'>
+                                <input type='range' name='items' min='5' max='15' label='Items: ' id='item' onchange='fetchItem()'>
+                                <input type='text' id='item-input' name='item-input' onchange="fetchItemInput()" class='form-control'>
+                            </div>
+                            <div class='row'>
+                                <input type='range' name='duration' min='5' max='15' label='Duration: ' id='duration' onchange='fetchDuration()'>
+                                <input type='text' id='duration-input' name='duration-input' onchange="fetchDurationInput()">
+                            </div>
+                            <div class='row'>
+                                <button type='submit' name='activate-quiz-submit' accesskey="q" class='btn btn-primary'>ACTIVATE QUIZ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 			</div>
 		</div>
-	</div>
-	<!-- eof -->
-</div>
+
