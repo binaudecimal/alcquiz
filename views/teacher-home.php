@@ -2,7 +2,6 @@
 	$data = Controller::selectTopStudents();
 	$session = mt_rand(1,999);
 ?>
-<script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
 <style>
 
 </style>
@@ -39,7 +38,12 @@
 		var myChart = new Chart(ctx, <?php  echo $data?>);
 		Chart.defaults.scale.ticks.beginAtZero = true;
 	});
-
+    $(document).ready(function(){
+            //$('#myModal').modal(options);    
+              $("#quizStart").click(function(event){
+            $('#quizModal').modal('show'); 
+            });
+          });
 	//websocket_server
 	jQuery(function($){
 		// Websocket
@@ -68,57 +72,73 @@
 	//eof
 </script>
 
-<div class='container'>
+
+<div class='container-fluid'>
 		<div class='row'>
             <div class='col-9'>
                 <div class='row'>
-                    <div class='btn-group' role='group'>
-                        <form action='add-question-form' method='POST'>
-                            <button type='submit' name='addQuestion' class='btn btn-light btn-lg'>Add Question</button>
-                        </form>
+                    <div class='container'>
+                        <div class='btn-group' role='group'>
+                            <form action='add-question-form' method='POST'>
+                                <button type='submit' name='addQuestion' class='btn btn-light btn-lg'>Add Question</button>
+                            </form>
 
-                        <form action='populate-question' method='POST'>
-                            <button type='submit' name='editQuestion' class='btn btn-light btn-lg'>Edit Question</button>
-                        </form>
-                        <button type="button" class="btn btn-light" data-toggle="modal" data-target="#quizModal">
-                              Activate Quiz
+                            <form action='populate-question' method='POST'>
+                                <button type='submit' name='editQuestion' class='btn btn-light btn-lg'>Edit Question</button>
+                            </form>
+                            <button type="button" id='quizStart' class="btn btn-light" data-toggle="modal" data-target="#quizModal">
+                                  Activate Quiz
                             </button>
-                        
+                        </div>
                     </div>
                 </div>
             </div>
 		</div> <!-- row of buttons-->
-        <div class='row'> <!-- Row of status -->
-            <!-- insert status here -->
+        <div class='row justify-content-center'> <!-- Row of status -->
+            <?php 
+                if(isset($_GET['status'])){
+                    switch($_GET['status']){
+                        case 'activate-success': echo "
+                            <div class='alert alert-success' role='alert'>
+                                Quiz successfully started.
+                            </div>
+                        ";
+                    }
+                }
+            ?>
         </div>
         <div class='row'> <!-- Row of chart and logs -->
             <div class='col-9'>
-                <div class='container'>
+                <div class='container' style='height:400px;'>
                     <div class='dashboard'>
-                    <canvas id='myChart' width='400' height='400'>
+                    <canvas id='myChart' width='400px' height='400px'>
                     </canvas>
                 
                 </div>
             </div>
 		</div>
             <div class='col-3'>
-                <div class='container'>
-                    <div class='row'> <!-- row of chats -->
-                        <div class='col-3'>
-                            <div class='container bg-primary'>
-                                <div class='chats' id="chat_output" overflow='scroll'>
-                                    <!-- chats here -->
-                                </div>
-                            </div>
-                        </div>
+                <div class='card' style='height:400px;'>
+                    <div class='card-header'>
+                        Student's chat
                     </div>
-                    <div class='row'> <!-- row of logs -->
-                        <div class='col-3'>
-                            <div class='container bg-auto'>
-                                <div class='logs' id='logs'>
-                                    <!-- logs here-->
-                                </div>
-                            </div>
+                    <div class='card-body'>
+                        
+                        <div class='chats' id="chat_output" style='overflow-y: scroll;
+                            height: 300px;'>
+                            <!-- chats here -->
+                        </div>
+
+                    </div>
+                </div>
+                <div class='card' style='height:400px;'>
+                    <div class='card-header'>
+                        Logs
+                    </div>
+                    <div class='card-body'>
+                        <div class='logs' id='logs' style='overflow-y: scroll;
+                            height: 300px;'>
+                            <!-- logs here-->
                         </div>
                     </div>
                 </div>
